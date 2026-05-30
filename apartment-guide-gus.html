@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>Apartment Guide for Gus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#f6efe4;
+    --paper:#fffaf2;
+    --ink:#332b25;
+    --muted:#7a6f63;
+    --terracotta:#c1633f;
+    --terracotta-soft:#e8c4ad;
+    --sage:#7f8c6b;
+    --line:#e7ddcd;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;background:#ffffff;color-scheme:light}
+  body{
+    font-family:'Hanken Grotesk',sans-serif;
+    background:#ffffff;
+    color:var(--ink);
+    line-height:1.6;
+    min-height:100vh;
+    padding:32px 18px 64px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:600px;margin:0 auto}
+
+  header{
+    text-align:center;
+    padding:24px 8px 8px;
+    animation:rise .7s ease both;
+  }
+  .eyebrow{
+    font-size:.72rem;
+    letter-spacing:.28em;
+    text-transform:uppercase;
+    color:var(--terracotta);
+    font-weight:600;
+    margin-bottom:14px;
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:500;
+    font-size:clamp(2.1rem,8vw,3rem);
+    line-height:1.05;
+    letter-spacing:-.01em;
+  }
+  h1 em{font-style:italic;color:var(--terracotta)}
+  .intro{
+    margin:22px auto 0;
+    max-width:46ch;
+    color:var(--muted);
+    font-size:1.02rem;
+  }
+
+  .list{margin-top:34px;display:flex;flex-direction:column;gap:12px}
+
+  .item{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 1px 0 rgba(51,43,37,.02);
+    transition:border-color .25s ease, box-shadow .25s ease;
+    animation:rise .6s ease both;
+  }
+  .item.open{
+    border-color:var(--terracotta-soft);
+    box-shadow:0 12px 30px -16px rgba(193,99,63,.4);
+  }
+  .head{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:18px 20px;
+    background:none;
+    border:none;
+    cursor:pointer;
+    text-align:left;
+    font-family:inherit;
+    color:var(--ink);
+  }
+  .ico{
+    flex:0 0 auto;
+    width:38px;height:38px;
+    display:grid;place-items:center;
+    border-radius:11px;
+    background:var(--cream);
+    font-size:1.15rem;
+    transition:background .25s ease;
+  }
+  .item.open .ico{background:var(--terracotta-soft)}
+  .title{
+    flex:1;
+    font-size:1.06rem;
+    font-weight:600;
+    letter-spacing:-.01em;
+  }
+  .chev{
+    flex:0 0 auto;
+    color:var(--muted);
+    transition:transform .3s cubic-bezier(.6,.2,.2,1);
+  }
+  .item.open .chev{transform:rotate(180deg);color:var(--terracotta)}
+
+  .panel{
+    display:grid;
+    grid-template-rows:0fr;
+    transition:grid-template-rows .35s cubic-bezier(.6,.2,.2,1);
+  }
+  .item.open .panel{grid-template-rows:1fr}
+  .panel-inner{
+    overflow:hidden;
+    min-height:0;
+  }
+  .body{padding:2px 20px 22px 20px}
+  .body ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+  .body li{
+    position:relative;
+    padding-left:20px;
+    color:#46403a;
+    font-size:.97rem;
+  }
+  .body li::before{
+    content:"";
+    position:absolute;left:2px;top:.62em;
+    width:6px;height:6px;border-radius:50%;
+    background:var(--terracotta-soft);
+  }
+  .body li b{color:var(--ink);font-weight:600}
+  .yes{color:var(--sage);font-weight:600}
+  .note{margin-top:14px;font-size:.9rem;color:var(--muted);font-style:italic}
+
+  /* contacts */
+  .contacts{margin-top:42px;animation:rise .6s ease both}
+  .sec-label{
+    font-family:'Fraunces',serif;
+    font-size:1.4rem;
+    font-weight:500;
+    margin-bottom:16px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:8px 6px;
+  }
+  .contact{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;
+    padding:13px 16px;
+    text-decoration:none;
+    color:var(--ink);
+    border-radius:12px;
+    transition:background .2s ease;
+  }
+  .contact:not(:last-child){border-bottom:1px solid var(--line)}
+  .contact:active,.contact:hover{background:var(--cream)}
+  .contact .who{font-weight:600;font-size:.97rem}
+  .contact .num{color:var(--terracotta);font-size:.92rem;white-space:nowrap}
+
+  .address{
+    margin-top:18px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:22px;
+    text-align:center;
+  }
+  .address .name{font-family:'Fraunces',serif;font-size:1.25rem;font-weight:500}
+  .address p{color:var(--muted);font-size:.95rem;margin-top:6px}
+  .address a{color:var(--terracotta);text-decoration:none;font-weight:600}
+
+  footer{
+    text-align:center;
+    margin-top:40px;
+    color:var(--muted);
+    font-size:.9rem;
+  }
+  footer .heart{color:var(--terracotta)}
+
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Condomínio Paço Trianon</div>
+    <h1>Hi <em>Gustavo!</em></h1>
+    <p class="intro">Here is some information about the apartment to help you get settled quickly. We hope you have an absolutely amazing time!</p>
+  </header>
+
+  <div class="list" id="list">
+
+    <!-- 1 -->
+    <div class="item">
+      <button class="head"><span class="ico">🔑</span><span class="title">Getting in &amp; out</span><span class="chev">⌄</span></button>
+      <div class="panel"><div class="panel-inner"><div class="body"><ul>
+        <li>Apartment keys + garage remote are on the <b>shelf as you walk in</b>.</li>
+        <li>Garage spaces aren't numbered — park anywhere that <b>isn't marked in yellow</b>.</li>
+        <li>Send us your <b>car plate + make/model + colour</b> so we can register it with reception.</li>
+      </ul></div></div></div>
+    </div>
+
+    <!-- 2 -->
+    <div class="item">
+      <button class="head"><span class="ico">🏢</span><span class="title">Building &amp; apartment support</span><span class="chev">⌄</span></button>
+      <div class="panel"><div class="panel-inner"><div class="body"><ul>
+        <li><b>Apartment phone:</b> dial the apartment number to call another apartment.</li>
+        <li><b>Reception / doorman:</b> dial <b>94</b>.</li>
+        <li>The apartment phone sometimes won't dial out — if that happens, just WhatsApp reception.</li>
+        <li>We'll email the building to let them know you'll be staying.</li>
+      </ul></div></div></div>
+    </div>
+
+    <!-- 3 -->
+    <div class="item">
+      <button class="head"><span class="ico">💡</span><span class="title">Bills &amp; rent</span><span class="chev">⌄</span></button>
+      <div class="panel"><div class="panel-inner"><div class="body"><ul>
+        <li>Water, electricity and gas are <b>covered by us</b>.</li>
+        <li>Rent / payment is already sorted with Felipe.</li>
+      </ul></div></div></div>
+    </div>
+
+    <!-- 4 -->
+    <div class="item">
+      <button class="head"><span class="ico">🧹</span><span class="title">Cleaner</span><span class="chev">⌄</span></button>
+      <div class="panel"><div class="panel-inner"><div class="body"><ul>
+        <li>Chris comes <b>twice a week</b> (usually Monday + Thursday).</li>
+        <li>She cleans, and can also <b>cook / prep food for the week</b> if you'd like.</li>
+        <li>The apartment is small, so cleaning alone is pretty quick.</li>
+        <li>We pay her <b>R$220 per day worked</b>.</li>
+        <li>At the start of the month we count her days and pay in advance via <b>PIX</b>.</li>
+        <li>We'll connect you both directly.</li>
+      </ul></div></div></div>
+    </div>
+
+    <!-- 5 -->
+    <div class="item">
+      <button class="head"><span class="ico">✈️</span><span class="title">When you travel</span><span class="chev">⌄</span></button>
+      <div class="panel"><div class="panel-inner"><div class="body"><ul>
+        <li>Just leave the key <b>under the mat</b> for Chris.</li>
+        <li>She'll water the plants and keep an eye on the apartment while you're away.</li>
+        <li>This is also when she can do the deeper clean.</li>
+      </ul></div></div></div>
+    </div>
+
+    <!-- 6 -->
+    <div class="item">
+      <button class="head"><span class="ico">🧺</span><span class="title">Supplies</span><span class="chev">⌄</span></button>
+      <div class="panel"><div class="panel-inner"><div class="body">
+        <p style="color:var(--muted);font-size:.95rem;margin-bottom:10px">The apartment is stocked with the following. Help yourself to all of it!</p>
+        <ul>
+        <li>Toilet paper</li>
+        <li>Bin liners</li>
+        <li>Laundry liquid + softener</li>
+        <li>Hand soap</li>
+        <li>Cleaning / basic home supplies</li>
+      </ul></div></div></div>
+    </div>
+
+    <!-- 7 -->
+    <div class="item">
+      <button class="head"><span class="ico">📦</span><span class="title">Storage space</span><span class="chev">⌄</span></button>
+      <div class="panel"><div class="panel-inner"><div class="body"><ul>
+        <li>Upstairs cupboard is cleared for you.</li>
+        <li>Our things have been moved to Eloy's room.</li>
+        <li>There's space under the bed for suitcases.</li>
+      </ul></div></div></div>
+    </div>
+
+    <!-- 8 -->
+    <div class="item">
+      <button class="head"><span class="ico">🛠️</span><span class="title">Good to know about the apartment</span><span class="chev">⌄</span></button>
+      <div class="panel"><div class="panel-inner"><div class="body"><ul>
+        <li><b>Eloy's wall:</b> <span class="yes">fixed ✓</span></li>
+        <li><b>Kitchen faucet:</b> <span class="yes">replaced ✓</span></li>
+        <li><b>Eloy's door:</b> still not fixed.</li>
+        <li><b>Living room lights:</b> some need replacing (sorry we didn't get to them!).</li>
+        <li><b>Washing machine:</b> still works but can be annoying and throw an error — turning it off/on usually fixes it.</li>
+        <li><b>Laundry downstairs:</b> great if you need it, especially the dryer in winter.</li>
+      </ul></div></div></div>
+    </div>
+
+    <!-- 9 -->
+    <div class="item">
+      <button class="head"><span class="ico">💬</span><span class="title">If anything breaks or goes wrong</span><span class="chev">⌄</span></button>
+      <div class="panel"><div class="panel-inner"><div class="body"><ul>
+        <li>No stress — these things happen 😊</li>
+        <li>Just let us know when it happens so we can help sort it out.</li>
+      </ul></div></div></div>
+    </div>
+
+    <!-- 10 -->
+    <div class="item">
+      <button class="head"><span class="ico">🍽️</span><span class="title">Restaurant downstairs</span><span class="chev">⌄</span></button>
+      <div class="panel"><div class="panel-inner"><div class="body"><ul>
+        <li>The restaurant downstairs is <b>running again</b>.</li>
+        <li>They have a <b>WhatsApp group with the daily menu</b>.</li>
+      </ul>
+      <p style="color:var(--muted);font-size:.9rem;margin:14px 0 8px;font-weight:600">Opening hours</p>
+      <ul>
+        <li><b>Tue–Fri:</b> 12:00–14:30 &amp; 19:00–21:30</li>
+        <li><b>Sat:</b> Closed</li>
+        <li><b>Sun:</b> 12:00–16:00</li>
+      </ul></div></div></div>
+    </div>
+
+  </div>
+
+  <!-- contacts -->
+  <div class="contacts">
+    <div class="sec-label">📇 Contacts</div>
+    <div class="card">
+      <a class="contact" href="tel:+5511993244649"><span class="who">Reception / Paço Trianon</span><span class="num">+55 11 99324-4649</span></a>
+      <a class="contact" href="tel:+5511963343627"><span class="who">José Enaldo (zelador)</span><span class="num">+55 11 96334-3627</span></a>
+      <a class="contact" href="tel:+5511913046060"><span class="who">Edgar (administrador)</span><span class="num">+55 11 91304-6060</span></a>
+      <a class="contact" href="tel:+5511945895727"><span class="who">Cris (cleaner)</span><span class="num">+55 11 94589-5727</span></a>
+      <a class="contact" href="tel:+5515996906699"><span class="who">Rafael Altério (landlord)</span><span class="num">+55 15 99690-6699</span></a>
+    </div>
+
+    <div class="address">
+      <div class="name">📍 Condomínio Paço do Trianon</div>
+      <p>The building has two possible addresses:<br>
+      Praça Alexandre de Gusmão, 95<br>
+      Alameda Jaú, 796 · Cerqueira César<br>
+      São Paulo – SP · CEP 01420-000</p>
+      <p><a href="tel:+551132831119">☎️ (11) 3283-1119</a></p>
+    </div>
+  </div>
+
+  <footer>Make yourself at home <span class="heart">♥</span></footer>
+
+</div>
+
+<script>
+  const items = document.querySelectorAll('.item');
+  items.forEach((item, i) => {
+    item.style.animationDelay = (0.05 * i) + 's';
+    item.querySelector('.head').addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      items.forEach(o => o.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+</script>
+</body>
+</html>
